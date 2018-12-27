@@ -27,12 +27,19 @@ def search_pokemon():
         }
         return switcher.get(t, '﹖(' + t + ')')
 
+    def get_evolutions(pokemon_id):
+        req = requests.get(BASE_URL + 'evolution-chain/' + str(pokemon_id))
+        evolutions = [evolution['species']['name']
+                      for evolution in req.json()['chain']['evolves_to']]
+        return evolutions
+
     print('----\nid: ', pokemon.get('id'))
     print('Pokemon: ', pokemon['name'])
     print('Type: ', [get_type_emoji(t) for t in types])
+    print('Evolutions:', get_evolutions(pokemon.get('id')))
 
 
-while exit_program == False:
+while not exit_program:
     search_pokemon()
     search_again = input('\nwould you like to search another pokemon? (y/n)\n')
     exit_program = search_again != 'y'
